@@ -1,0 +1,34 @@
+#include <iostream>
+
+int main() {
+ const int size = 100;
+ char arr[size];
+ std::cin.getline(arr, size);
+ int count_max = 0;
+ char most_common_char = '\0'; // To store the most common character
+ int i = 0;
+
+ while (arr[i] != '\0') {
+  if (arr[i] != ' ') {
+   int count1 = 1; // Initialize count1 for the current character
+   for (int j = i + 1; arr[j] != '\0'; j++) { // էս մասն եմ փոփոխել, քո խնդրի տրամաբանության համաձայն
+    if (arr[i] == arr[j]) {
+     count1++;
+    }
+   }
+
+   if (count1 > count_max) {
+    count_max = count1;
+    most_common_char = arr[i];
+   }
+  }
+  i++;
+ }
+
+ if (count_max > 1) {
+  std::cout << "The most common character is '" << most_common_char << "' with a count of " << count_max << std::endl;
+ } else {
+  std::cout << "No non-space characters entered." << std::endl;
+ }
+ return 0;
+}
