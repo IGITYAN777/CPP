@@ -1,34 +1,148 @@
+//   std vector
+
 #include <iostream>
 
-int main() {
- const int size = 100;
- char arr[size];
- std::cin.getline(arr, size);
- int count_max = 0;
- char most_common_char = '\0'; // To store the most common character
- int i = 0;
-
- while (arr[i] != '\0') {
-  if (arr[i] != ' ') {
-   int count1 = 1; // Initialize count1 for the current character
-   for (int j = i + 1; arr[j] != '\0'; j++) { // էս մասն եմ փոփոխել, քո խնդրի տրամաբանության համաձայն
-    if (arr[i] == arr[j]) {
-     count1++;
+template <class T>
+struct Vector{
+    public:
+    void init(size_t initsize){
+        if(arr != nullptr){
+            delete[] arr;
+        }
+        arr = new T[initsize];
+        size = initsize;
+        capacity = 2 * initsize;
     }
-   }
+    
+    void init(size_t size, T val){
+        init(size);
+        for(size_t i = 0; i < size; ++i){
+            arr[i] = val;
+        }
+    }
+    
+    void resize(size_t newsize, T val){
+        capacity = 2*newsize;
+        T *tmp = new T[capacity];
+        for(size_t i = 0; i < size; ++i){
+            tmp[i] = arr[i];
+        }
+        for(size_t i = size; i < newsize; ++i){
+            tmp[i] = val;
+        }
+        size = newsize;
+        delete[] arr;
+        arr = tmp;
+        tmp = nullptr;
+    }
+    
+    T& at(size_t index){
+        return arr[index];
+    }
+    
+    T& front(){
+        return arr[0];
+    }
+    
+    T& back(){
+        return arr[size - 1];
+    }
+    
+    void insert(size_t index, T val){
+        if(size == capacity){
+            recap(size*2);
+        }
+        ++size;
+        for(size_t i = 0, j = 0; i < size; ++i, ++j){
+            if(i == index){
+                arr[i] = val;
+                ++i;
+            }
+            arr[i] = arr[j];
+        }
+    }
+    
+    void removeal(size_t index){
+        size -= 1;
+        T* tempr = new T[size];
+        int j = -1;
+        for(size_t i = 0; i < size; ++i){
+            j += 1;
+            if(i == index){
+                j += 1;
+                tempr[i] = arr[j];
+            }
+            tempr[i] = arr[j];
+        }
+        delete[] arr;
+        arr = tempr;
+        tempr = nullptr;
+    }    
+    
+    void push_back(T element){
+        if(size == capacity){
+            recap(2*size);
+        }
+        arr[size] = element;
+        ++size;
+    }  
+    
+    void pop_back(){
+        size -= 1;
+        T* tempr = new T[size];
+        for(size_t i = 0; i < size; ++i){
+            tempr[i] = arr[i];
+        }
+        delete[] arr;
+        arr = tempr;
+        tempr = nullptr;
+    }
+    
+    bool empty(){
+        if(size == 0){
+            return true;
+        }
+        return false;
+    }
+    
+    void print(){
+        for(size_t i = 0; i < size; ++i){
+            std::cout<< arr[i] << " ";
+        }
+        std::cout<< "\n";
+    }
+    
+    void clear(){
+        delete[] arr;
+        arr = nullptr;
+    }
 
-   if (count1 > count_max) {
-    count_max = count1;
-    most_common_char = arr[i];
-   }
-  }
-  i++;
- }
+    private:
+        size_t size;
+        size_t capacity;
+        T* arr = nullptr;
+        void recap(size_t newcap){
+            if(size == capacity){
+                capacity = newcap;
+                T* tmp = new T[newcap];
+                for(size_t i = 0; i < size; ++i){
+                    tmp[i] = arr[i];
+                }
+                delete[] arr;
+                arr = tmp;
+            }
+        } 
+};
 
- if (count_max > 1) {
-  std::cout << "The most common character is '" << most_common_char << "' with a count of " << count_max << std::endl;
- } else {
-  std::cout << "No non-space characters entered." << std::endl;
- }
- return 0;
+int main() {
+    
+    Vector<int> v;
+    v.init(10,7);
+    v.insert(2,8);
+    v.print();
+
+    return 0;
 }
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
